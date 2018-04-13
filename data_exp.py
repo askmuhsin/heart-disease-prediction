@@ -3,7 +3,9 @@ prediction -->
 -- Value 0: < 50% diameter narrowing
 -- Value 1: > 50% diameter narrowing
 """
-def init_data():
+import numpy as np
+
+def getLabel():
     feature_set = {
         1 : "age",
         2 : "sex",
@@ -19,6 +21,7 @@ def init_data():
         12: "ca",
         13: "thal"
     }
+    return feature_set
 
 def getData():
     data = []
@@ -46,8 +49,23 @@ def getData():
 
     return X, y
 
-def main():
+def normalize(feat):
+    numerator = feat - min(feat)
+    denominator = max(feat)-min(feat)
+    z = numerator/denominator
+    return z
+
+def getNormData():
     X, y = getData()
+    X = np.array(X)
+    for i in range(len(X[0])):
+        X[:,i] = normalize(X[:, i])
+    y = np.array(y)
+    y = y.reshape(y.shape[0], 1)
+    return X, y
+
+def main():
+    X, y = getNormData()
     for x, y_ in zip(X, y):
         print(x, y_, sep='\t')
 
